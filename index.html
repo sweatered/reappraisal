@@ -1,0 +1,511 @@
+<html>
+<head>
+
+<title>Reappraisal</title>
+
+<script
+  src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+  integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="
+  crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+
+
+var questions = [
+    "Hello?",
+    "Is it me, you're looking for?"
+];
+var answers = [];
+
+var loops = {
+    practice: [
+        { id: "P1", circle_x: 50, circle_y: 50, square_x: 100, square_y: 100, type: "LOSS", result: "" },
+        { id: "P2", circle_x: 200, circle_y: 200, square_x: 50, square_y: 50, type: "GAIN", result: "" },
+    ],
+    trial: [
+        { id: "T1", circle_x: 50, circle_y: 50, square_x: 100, square_y: 100, type: "LOSS", result: "" },
+        { id: "T2", circle_x: 200, circle_y: 200, square_x: 50, square_y: 50, type: "GAIN", result: "" },
+    ],
+};
+
+$(document).ready(function() {
+
+
+    var slideNr = -1,
+        questionNr = -1,
+        canvas = $("#canvas"),
+        topSlides = $("#canvas > .slide"),
+        staticNexts = $("#canvas > .slide[static] button.next"),
+        questionnaireNexts = $("#canvas > .slide[questionnaire] button.next"),
+        requiredNexts = $("#canvas > .slide[required] button.next"),
+        questionNexts = $("#canvas > .slide[question] button.next"),
+        circles = $("#canvas > .slide > .circle"),
+        squares = $("#canvas > .slide > .square"),
+        gameWinDurationMs = 2000;
+
+    function nextSlide(slides, parentSlides){
+        slideNr++;
+        if (slideNr >= slides.length && parentSlides !== undefined){
+            var slide = $(slides.get(slideNr - 1));
+                parentSlide = slide.parent(),
+                loop = parentSlide[0].attributes.loop.value;
+                position = parseInt(parentSlide.attr("position")),
+                nr = parseInt(parentSlide.attr("nr"));
+
+            nr++;
+
+            if (nr >= loops[loop].length){
+                slideNr = position;
+                nextSlide(parentSlides);
+                return;
+            }
+            else {
+                parentSlide.attr("nr", nr);
+                slideNr = -1;
+                nextSlide(slides);
+                return;
+            }
+        }
+        var slide = $(slides.get(slideNr));
+        showSlide(slides, slide, parentSlides);
+    }
+    function nextQuestion(slides){
+        slides.each(function(){
+            $(this).removeClass("warning");
+        });
+        var slide = $(slides.get(slideNr));
+
+        if (questionNr >= 0){
+            var radio = slide.find("input[name='answer']:checked");
+            if (radio.length === 0){
+                slide.addClass("warning");
+                return;
+            }
+            
+            answers.push([ slide.find("#questionText").html(), radio.val() ]);
+            radio.prop("checked", false);
+        }
+        
+        questionNr++;
+        showQuestion(slides, slide);
+    }
+
+    function showSlide(slides, slide, parentSlides){
+
+        console.log("Showing slide " + slideNr);
+
+        slides.each(function(){
+            $(this).hide();
+            $(this).removeClass("warning");
+        });
+        slide.show();
+        
+        var autonext = slide.attr("autonext");
+        if (autonext !== undefined)
+        {
+            console.log("Skipping in " + autonext + "ms.");
+            window.setTimeout(function() { nextSlide(slides, parentSlides); }, parseInt(autonext));
+        }
+
+        var questionnaire = slide.attr("questionnaire");
+        if (questionnaire !== undefined)
+        {
+            questionNr = -1;
+            nextQuestion(slides);
+        }
+
+        var loop = slide.attr("loop");
+        if (loop !== undefined)
+        {
+            loopNr = -1;
+            startLoop(slides, slide);
+        }
+        
+        // inside loop
+        var parent = slide.parent();
+        if (parent.is("[loop]")){
+            var nr = parseInt(parent.attr("nr"));
+            var loop = parent[0].attributes.loop.value;
+            for(var propertyName in loops[loop][nr]) {
+                slide.find("[data='"+propertyName+"']").html(loops[loop][nr][propertyName]);
+            }
+        }
+
+        var game = slide.attr("game");
+        if (game !== undefined)
+        {
+            var nr = parseInt(parent.attr("nr"));
+            var loop = parent[0].attributes.loop.value;
+            var circle = $(".circle").css("top", loops[loop][nr]["circle_y"]+"px").css("left", loops[loop][nr]["circle_x"]+"px");
+            var square = $(".square").css("top", loops[loop][nr]["square_y"]+"px").css("left", loops[loop][nr]["square_x"]+"px");
+            startGame();
+        }
+
+        var complete = slide.attr("complete");
+        if (complete !== undefined)
+        {
+            var builder = "";
+            for (var i in answers){
+                for (var j in answers[i]){
+                    builder += '"' + answers[i][j] + '",';
+                }
+                builder += "\n";
+            }
+
+            slide.find("#results").val(btoa(builder));
+        }
+
+    }
+
+    function showQuestion(slides, slide){
+        if (questionNr >= questions.length){
+            console.log("Finished questionnaire.");
+            nextSlide(slides);
+        }
+        else {
+            console.log("Showing question " + questionNr);
+            slide.find("#questionText").html(questions[questionNr]);
+        }
+    }
+
+    function requiredNext(slides){
+        var slide = $(slides.get(slideNr));
+        var checked = slide.find("input[type=checkbox]").is(":checked");
+        if (checked){
+            console.log("Required checkbox checked.");
+            nextSlide(slides);
+        }
+        else {
+            console.log("Required checkbox unchecked.");
+            slide.addClass("warning");
+        }
+    }
+
+    function questionNext(slides){
+        var slide = $(slides.get(slideNr));
+        var textbox = slide.find("input[type=text]");
+        if (textbox.val() !== ""){
+            console.log("Question answered.");
+            answers.push([ slide.attr("question"), textbox.val() ])
+            nextSlide(slides);
+        }
+        else {
+            console.log("Required textbox empty.");
+            slide.addClass("warning");
+        }
+    }
+
+    function startLoop(parentSlides, slide){
+
+        slide.attr("position", slideNr);
+        slide.attr("nr", "0")
+        slideNr = -1;
+
+        var nestedSlides = slide.find(".slide"),
+            nestedStaticNexts = slide.find(".slide[static] button.next"),
+            nestedQuestionnaireNexts = slide.find(".slide[questionnaire] button.next"),
+            nestedRequiredNexts = slide.find(".slide[required] button.next"),
+            nestedQuestionNexts = slide.find(".slide[question] button.next"),
+            nestedCircles = slide.find(".slide > .circle"),
+            nestedSquares = slide.find(".slide > .square");
+
+        nestedStaticNexts.click(function() { nextSlide(nestedSlides, parentSlides); });
+        nestedQuestionnaireNexts.click(function() { nextQuestion(nestedSlides, parentSlides); });
+        nestedRequiredNexts.click(function(){ requiredNext(nestedSlides, parentSlides); });
+        nestedQuestionNexts.click(function(){ questionNext(nestedSlides, parentSlides); });
+        nestedCircles.click(function(){ recordCircle(nestedSlides, parentSlides); });
+        nestedSquares.click(function(){ recordSquare(nestedSlides, parentSlides); });
+
+        circles.click(function() { recordCircle(nestedSlides, parentSlides); });
+        squares.click(function() { recordSquare(nestedSlides, parentSlides); });
+
+        nextSlide(nestedSlides);
+    }
+
+    var gameStartTime = 0,
+        gameCompleteTime = 0,
+        clickedCircle = false,
+        clickedSquare = false;
+
+    function startGame(){
+        gameStartTime = new Date().getTime();
+        gameCompleteTime = 0;
+        clickedCircle = false;
+        clickedSquare = false;
+    }
+
+    function recordCircle(slides, parentSlides){
+        console.log("Circle clicked");
+        clickedCircle = true;
+        checkGame(slides, parentSlides);
+    }
+
+    function recordSquare(slides, parentSlides){
+        console.log("Square clicked");
+        
+        if (!clickedCircle){
+            console.log("Circle not clicked.");
+            return;
+        }
+
+        clickedSquare = true;
+        checkGame(slides, parentSlides);
+    }
+
+    function checkGame(slides, parentSlides){
+
+        if (clickedCircle && clickedSquare){
+            gameCompleteTime = new Date().getTime();
+
+            var duration = gameCompleteTime - gameStartTime,
+                slide = $(slides.get(slideNr));
+                parentSlide = slide.parent(),
+                loop = parentSlide[0].attributes.loop.value,
+                nr = parseInt(parentSlide.attr("nr")),
+                id = loops[loop][nr]["id"],
+                result = "";
+
+            console.log("Game took "+duration+"ms")
+
+            if (duration <= gameWinDurationMs){
+                result = "SUCCESS";
+            }
+            else {
+                result = "FAIL";
+            }
+
+            console.log(id + ": " + result);
+
+            loops[loop][nr].result = result;
+            answers.push([ id, result ]);
+
+            nextSlide(slides, parentSlides);
+        }
+    }
+
+    staticNexts.click(function() { nextSlide(topSlides); });
+    questionnaireNexts.click(function() { nextQuestion(topSlides); });
+    requiredNexts.click(function(){ requiredNext(topSlides); });
+    questionNexts.click(function(){ questionNext(topSlides); });
+
+    circles.click(function() { recordCircle(topSlides); });
+    squares.click(function() { recordSquare(topSlides); });
+
+    nextSlide(topSlides);
+});
+
+</script>
+
+    <style type="text/css">
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px;
+            text-align: center;        
+        }
+        h1 {
+            margin: 0;
+            font-size: 3em;
+            line-height: 3em;
+        }
+        input[type=text]{
+            width: 300px;
+            padding: 18px 30px;
+            font-size: 20px;
+            font-weight: bold;
+            font-family:'Courier New', Courier, monospace;
+            border: 2px solid black;
+        }
+        button {
+            padding: 20px 60px;
+            background: lightseagreen;
+            font-size: 20px;
+            font-weight: bold;
+            font-family:'Courier New', Courier, monospace;
+            border: 0;
+        }
+        textarea {
+            display: block;
+            margin: 0 auto;
+            width: 500px;
+            height: 300px;
+            font-family:'Courier New', Courier, monospace;
+            font-size: 14px;
+            padding: 10px;
+        }
+        #canvas > .slide {
+            display: none;
+            position: relative;
+            width: 880px;
+            height: 550px;
+            margin: 20px auto;
+            border: 4px solid black;
+            padding: 20px;
+        }
+        .slide.warning {
+            color: red;
+        }
+        .circle {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 100%;
+            background: limegreen;
+            cursor: pointer;
+        }
+        .square {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: orange;
+            cursor: pointer;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div id="canvas">
+
+        <div class="slide" static>
+            <h1>slide 1</h1>
+            <button class="next">Start</button>
+        </div>
+
+        <div class="slide" question="Name">
+            <h1>New test who dis?</h1>
+            <input type="text" value="" />
+            <button class="next">Next</button>
+        </div>
+        
+        <div class="slide" static>
+            <h1>More static slides</h1>
+            <button class="next">Start</button>
+        </div>
+
+        <div class="slide" required>
+            <h1>This slide is required.</h1>
+
+            <p>Terms</p>
+
+            <p>
+                <label><input type="checkbox"> I am lab rat.</label>
+            </p>
+            
+            <button class="next">Continue</button>
+        </div>
+
+        <div class="slide" static>
+            <h1>More static slides</h1>
+            <button class="next">Start</button>
+        </div>
+
+        <div class="slide" questionnaire>
+
+            <h1 id="questionText"></h1>
+
+            <p>
+                <label>
+                    <input type="radio" name="answer" value="Yes"> Yes
+                </label>
+            </p>
+
+            <p>
+                <label>
+                    <input type="radio" name="answer" value="No"> No
+                </label>
+            </p>
+
+            <p>
+                <button class="next">Next</button>
+            </p>
+
+        </div>
+        
+        <div class="slide" static>
+            <h1>More static slides</h1>
+            <button class="next">Start</button>
+        </div>
+
+        <div class="slide" loop="practice">
+
+            <div class="slide" autonext="1000">
+                <h1 data="id"></h1>
+            </div>
+
+            <div class="slide" autonext="1000">
+                <h1 data="type"></h1>
+            </div>
+
+            <div class="slide" game>
+                <div class="circle"></div>
+                <div class="square"></div>
+            </div>
+                    
+            <div class="slide" autonext="1000">
+                <h1 data="result"></h1>
+            </div>
+                
+        </div>
+
+        <div class="slide" autonext="1000">
+            <h1>slide 2</h1>
+            <p>Will skip after 1000 milliseconds.</p>
+        </div>
+
+        <div class="slide" loop="trial">
+
+            <div class="slide" autonext="1000">
+                <h1 data="id"></h1>
+            </div>
+
+            <div class="slide" autonext="1000">
+                <h1 data="type"></h1>
+            </div>
+
+            <div class="slide" game>
+                <div class="circle"></div>
+                <div class="square"></div>
+            </div>
+                    
+            <div class="slide" autonext="1000">
+                <h1 data="result"></h1>
+            </div>
+
+        </div>
+
+        <div class="slide" questionnaire>
+
+            <h1 id="questionText"></h1>
+
+            <p>
+                <label>
+                    <input type="radio" name="answer" value="Yes"> Yes
+                </label>
+            </p>
+
+            <p>
+                <label>
+                    <input type="radio" name="answer" value="No"> No
+                </label>
+            </p>
+
+            <p>
+                <button class="next">Next</button>
+            </p>
+
+        </div>
+        
+        <div class="slide" static>
+            <h1>slide 3</h1>
+            <button class="next">Next</button>
+        </div>
+
+        <div class="slide" complete>
+            <h1>Finished loop</h1>
+            <textarea id="results"></textarea>
+        </div>
+
+    </div>
+
+</body>
+</html>
