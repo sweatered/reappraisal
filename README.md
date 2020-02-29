@@ -6,4 +6,4 @@ The experiment should take about 15 minutes to complete, and will involve a 30 q
 
 Please note: You will need a computer mouse for this experiment.
 
-[Begin the experiment.](index.html)
+[Begin the experiment.](https://sweatered.github.io/reappraisal/index.html)
