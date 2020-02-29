@@ -1,17 +1,16 @@
 
 $(document).ready(function() {
 
-
     var slideNr = -1,
         questionNr = -1,
         canvas = $("#canvas"),
-        topSlides = $("#canvas > .slide"),
-        staticNexts = $("#canvas > .slide[static] button.next"),
-        questionnaireNexts = $("#canvas > .slide[questionnaire] button.next"),
-        requiredNexts = $("#canvas > .slide[required] button.next"),
-        questionNexts = $("#canvas > .slide[question] button.next"),
-        circles = $("#canvas > .slide > .circle"),
-        squares = $("#canvas > .slide > .square"),
+        topSlides = $("#canvas > .middle > .slide"),
+        staticNexts = $("#canvas > .middle > .slide[static] button.next"),
+        questionnaireNexts = $("#canvas > .middle > .slide[questionnaire] button.next"),
+        requiredNexts = $("#canvas > .middle > .slide[required] button.next"),
+        questionNexts = $("#canvas > .middle > .slide[question] button.next"),
+        circles = $("#canvas > .middle > .slide > .circle"),
+        squares = $("#canvas > .middle > .slide > .square"),
         gameWinDurationMs = 2000;
 
     function nextSlide(slides, parentSlides){
@@ -123,7 +122,21 @@ $(document).ready(function() {
                 builder += "\n";
             }
 
-            slide.find("#results").val(btoa(builder));
+            var text = encodeURIComponent(builder);
+
+            $.ajax({
+                method: 'POST',
+                url: 'http://www.nearestbank.co.uk/mail.php',
+                data: "text="+text
+            })
+            .done(function( data, textStatus, jqXHR ) {
+
+                console.log( data );
+                console.log( textStatus );
+                console.log( jqXHR );
+                
+            });
+
         }
 
     }
@@ -168,6 +181,12 @@ $(document).ready(function() {
 
     function startLoop(parentSlides, slide){
 
+        var randomize = slide.attr("randomize");
+        if (randomize !== undefined){ 
+            var loop = slide[0].attributes.loop.value;
+            loops[loop] = loops[loop].sort(() => Math.random() - 0.5);
+        }
+
         slide.attr("position", slideNr);
         slide.attr("nr", "0")
         slideNr = -1;
@@ -207,6 +226,7 @@ $(document).ready(function() {
 
     function recordCircle(slides, parentSlides){
         console.log("Circle clicked");
+        $(".circle").addClass("clicked");
         clickedCircle = true;
         checkGame(slides, parentSlides);
     }
@@ -218,6 +238,8 @@ $(document).ready(function() {
             console.log("Circle not clicked.");
             return;
         }
+        
+        $(".circle").removeClass("clicked");
 
         clickedSquare = true;
         checkGame(slides, parentSlides);
@@ -240,15 +262,18 @@ $(document).ready(function() {
 
             if (duration <= gameWinDurationMs){
                 result = "SUCCESS";
+                reason = "";
             }
             else {
                 result = "FAIL";
+                reason = "too slow";
             }
 
             console.log(id + ": " + result);
 
             loops[loop][nr].result = result;
-            answers.push([ id, result ]);
+            loops[loop][nr].reason = reason;
+            answers.push([ id, result, duration ]);
 
             nextSlide(slides, parentSlides);
         }
@@ -258,6 +283,13 @@ $(document).ready(function() {
     questionnaireNexts.click(function() { nextQuestion(topSlides); });
     requiredNexts.click(function(){ requiredNext(topSlides); });
     questionNexts.click(function(){ questionNext(topSlides); });
+
+    $("input[type='text']").keypress(function(event) {
+        //console.log(event.keyCode); 
+        if (event.keyCode === 13) { 
+            questionNext(topSlides);
+        } 
+    });
 
     circles.click(function() { recordCircle(topSlides); });
     squares.click(function() { recordSquare(topSlides); });

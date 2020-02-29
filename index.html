@@ -1,29 +1,80 @@
 <html>
 <head>
 
-    <title>Reappraisal</title>
+    <title>Experiment</title>
 
-    <script
-    src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-    integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="
-    crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 
     <script type="text/javascript">
 
         var questions = [
-            "Hello?",
-            "Is it me, you're looking for?"
+            "I plan tasks carefully.",
+            "I do things without thinking.",
+            "I make up my mind quickly.",
+            "I am happy-go-lucky.",
+            "I don't 'pay attention'.",
+            "I have 'racing' thoughts.",
+            "I plan trips well ahead of time.",
+            "I am self-controlled.",
+            "I concentrate easily.",
+            "I save regularly.",
+            "I 'squirm' at plays or lectures.",
+            "I am a careful thinker.",
+            "I plan for job security.",
+            "I say things without thinking.",
+            "I like to think about complex problems.",
+            "I change jobs.",
+            "I act 'on impulse'.",
+            "I get easily bored when solving thought problems.",
+            "I act on the spur of the moment.",
+            "I am a steady thinker.",
+            "I change residences.",
+            "I buy things on impulse.",
+            "I can only think about one problem at a time.",
+            "I change hobbies.",
+            "I spend more than I should.",
+            "I often have extraneous thoughts when thinking.",
+            "I am more interested in the present than the future.",
+            "I am restless at the theatre or lectures.",
+            "I like puzzles.",
+            "I am future oriented."
         ];
         var answers = [];
 
         var loops = {
             practice: [
-                { id: "P1", circle_x: 50, circle_y: 50, square_x: 100, square_y: 100, type: "LOSS", result: "" },
-                { id: "P2", circle_x: 200, circle_y: 200, square_x: 50, square_y: 50, type: "GAIN", result: "" },
+                { id: "P1", circle_x: 450, circle_y: 90, square_x: 200, square_y: 200, result: "" },
+                { id: "P2", circle_x: 200, circle_y: 200, square_x: 50, square_y: 50, result: "" },
+                { id: "P3", circle_x: 500, circle_y: 400, square_x: 100, square_y: 300, result: "" },
+                { id: "P4", circle_x: 200, circle_y: 400, square_x: 250, square_y: 50, result: "" },
+                { id: "P5", circle_x: 80, circle_y: 100, square_x: 500, square_y: 300, result: "" },
+                { id: "P6", circle_x: 700, circle_y: 200, square_x: 150, square_y: 450, result: "" },
+                { id: "P7", circle_x: 120, circle_y: 350, square_x: 500, square_y: 400, result: "" },
+                { id: "P8", circle_x: 200, circle_y: 200, square_x: 50, square_y: 50, result: "" },
+                { id: "P9", circle_x: 800, circle_y: 200, square_x: 200, square_y: 100, result: "" },
+                { id: "P10", circle_x: 230, circle_y: 500, square_x: 600, square_y: 350, result: "" },
             ],
             trial: [
-                { id: "T1", circle_x: 50, circle_y: 50, square_x: 100, square_y: 100, type: "LOSS", result: "" },
+                { id: "T1", circle_x: 450, circle_y: 90, square_x: 200, square_y: 200, type: "GAIN", result: "" },
                 { id: "T2", circle_x: 200, circle_y: 200, square_x: 50, square_y: 50, type: "GAIN", result: "" },
+                { id: "T3", circle_x: 500, circle_y: 400, square_x: 100, square_y: 300, type: "GAIN", result: "" },
+                { id: "T4", circle_x: 200, circle_y: 400, square_x: 250, square_y: 50, type: "GAIN", result: "" },
+                { id: "T5", circle_x: 80, circle_y: 100, square_x: 500, square_y: 300, type: "GAIN", result: "" },
+                { id: "T6", circle_x: 700, circle_y: 200, square_x: 150, square_y: 450, type: "GAIN", result: "" },
+                { id: "T7", circle_x: 120, circle_y: 350, square_x: 500, square_y: 400, type: "GAIN", result: "" },
+                { id: "T8", circle_x: 200, circle_y: 200, square_x: 50, square_y: 50, type: "GAIN", result: "" },
+                { id: "T9", circle_x: 800, circle_y: 200, square_x: 200, square_y: 100, type: "GAIN", result: "" },
+                { id: "T10", circle_x: 230, circle_y: 500, square_x: 600, square_y: 350, type: "GAIN", result: "" },
+                { id: "T11", circle_x: 450, circle_y: 90, square_x: 200, square_y: 200, type: "LOSS", result: "" },
+                { id: "T12", circle_x: 200, circle_y: 200, square_x: 50, square_y: 50, type: "LOSS", result: "" },
+                { id: "T13", circle_x: 500, circle_y: 400, square_x: 100, square_y: 300, type: "LOSS", result: "" },
+                { id: "T14", circle_x: 200, circle_y: 400, square_x: 250, square_y: 50, type: "LOSS", result: "" },
+                { id: "T15", circle_x: 80, circle_y: 100, square_x: 500, square_y: 300, type: "LOSS", result: "" },
+                { id: "T16", circle_x: 700, circle_y: 200, square_x: 150, square_y: 450, type: "LOSS", result: "" },
+                { id: "T17", circle_x: 120, circle_y: 350, square_x: 500, square_y: 400, type: "LOSS", result: "" },
+                { id: "T18", circle_x: 200, circle_y: 200, square_x: 50, square_y: 50, type: "LOSS", result: "" },
+                { id: "T19", circle_x: 800, circle_y: 200, square_x: 200, square_y: 100, type: "LOSS", result: "" },
+                { id: "T20", circle_x: 230, circle_y: 500, square_x: 600, square_y: 350, type: "LOSS", result: "" },
             ],
         };
 
@@ -34,13 +85,33 @@
     <style type="text/css">
         body {
             font-family: 'Courier New', Courier, monospace;
-            font-size: 16px;
-            text-align: center;        
+            font-size: 14px;
+            text-align: left;        
+        }
+        a {
+            color: blue;
+            font-weight: bold;
         }
         h1 {
-            margin: 0;
-            font-size: 3em;
-            line-height: 3em;
+            margin: 30px 0;
+            font-size: 2.5em;
+            line-height: 1.5em;
+            text-align: center;
+        }
+        h2 {
+            text-align: center;
+        }
+        #canvas {
+            display: table;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+        }
+        .middle {
+            display: table-cell;
+            vertical-align: middle;
         }
         input[type=text]{
             width: 300px;
@@ -57,126 +128,279 @@
             font-weight: bold;
             font-family:'Courier New', Courier, monospace;
             border: 0;
+            cursor: pointer;
         }
-        textarea {
-            display: block;
-            margin: 0 auto;
-            width: 500px;
-            height: 300px;
-            font-family:'Courier New', Courier, monospace;
-            font-size: 14px;
-            padding: 10px;
+        label {
+            cursor: pointer;
         }
-        #canvas > .slide {
+        #canvas > .middle > .slide {
             display: none;
             position: relative;
             width: 880px;
-            height: 550px;
-            margin: 20px auto;
-            border: 4px solid black;
+            margin: 0 auto;
             padding: 20px;
         }
         .slide.warning {
             color: red;
+        }
+        .slide[game]{
+            height: 550px;
         }
         .circle {
             position: absolute;
             width: 30px;
             height: 30px;
             border-radius: 100%;
-            background: limegreen;
+            background: lightseagreen;
             cursor: pointer;
         }
         .square {
             position: absolute;
-            width: 80px;
-            height: 80px;
-            background: orange;
+            width: 120px;
+            height: 120px;
+            background: white;
+            border: 2px solid black;
             cursor: pointer;
+        }
+        .clicked {
+            background: red;
+        }
+        h1[data='result']{
+            line-height: 1.5em;
+            margin: 0;
+            text-align:center;
+        }
+        h2[data='reason']{
+            color: #333;
+            line-height: 1.5em;
+            text-align:center;
         }
     </style>
 
 </head>
 <body>
 
-    <div id="canvas">
+    <div id="canvas"><div class="middle">
 
         <div class="slide" static>
-            <h1>Experiment Information</h1>
-            <p>This study is being carried out by Phoebe Cooper at The Open University 
+            <br>
+            <br>
+            <h2>Experiment Information</h2>
+            <h4 style="width: 720px; margin: 20px auto;">This study is being carried out by Phoebe Cooper at The Open University 
             and is investigating whether personality traits and/or cognitive emotional
-                regulation techniques might affect how we perform motor tasks.</p>
-            <p> The experiment should take about 15 minutes to complete, and will involve
+                regulation techniques might affect how we perform motor tasks. </h4>
+            <h4 style="width: 720px; margin: 20px auto;"> The experiment should take about 15 minutes to complete, and will involve
             a 30 question survey, followed by 10 practice levels of a mouse click task.
             You will then be given instructions on a cognitive reappraisal technique
             (emotional regulation) to use in the final 20 levels of the task, 
-                which you will then go on to complete.</p>
-            <button class="next">Start</button>
+                which you will then go on to complete.<br><br>
+            
+                <u>Please note: You will need a computer mouse for this experiment.</u></h4>
+            <br>
+            <h2> Voluntary Participation</h2>
+            <h4 style="width: 720px; margin: 20px auto;">Taking part in this experiment is entirely voluntary. If you 
+                decide to take part, you are free to withdraw at any time 
+                without having to give a reason and without negative consequence. 
+                If you decide to withdraw after submitting your results to the 
+                researcher then please email pc7446@ou.ac.uk with the name of the file you submitted.</h4>
+            <br>
+            <br>
+
+            <p style="text-align: center;"><button class="next">Continue</button></p>
         </div>
 
-        <div class="slide" question="Name">
-            <h1>New test who dis?</h1>
-            <input type="text" value="" />
-            <button class="next">Next</button>
-        </div>
-        
         <div class="slide" static>
-            <h1>More static slides</h1>
-            <button class="next">Start</button>
+            <h2>Confidentiality and Data Protection</h2>
+            <h4 style="width: 720px; margin: 20px auto;">All information collected will be anonymous; you will 
+                not be identified to the researcher or in any report
+                resulting from this experiment.  The data will be stored
+                securely in a password-protected area of the researcher’s
+                computer and deleted once the project is completed.</h4>
+            <br>
+            <h2>How will the data collected in the experiment be used?</h2>
+            <h4 style="width: 720px; margin: 20px auto;">All data collected will be aggregated, analysed statistically and 
+                summaries of the results will be included in a research report. </h4>
+            <br>
+            <h2>Feedback, Questions, Comments or Complaints</h2>
+            <h4 style="width: 720px; margin: 20px auto;">If you would like to know the overall results then please email
+                the researcher for a copy of the final report: pc7446@ou.ac.uk. Individual results cannot be disclosed.
+                <br> 
+                If you have any questions, comments or complaints about 
+                this experiment, we would be very happy to answer them.
+                Please contact either Phoebe Cooper (pc7446@ou.ac.uk)
+                or Dr Axelle Philippon (a.philippon@open.ac.uk) 
+            </h4>
+            <br>
+
+            <p style="text-align: center;"><button class="next">Continue</button></p>
+        </div>
+
+        <div class="slide" static>
+            <h1>Content Warning</h1>
+            <h4 style="width: 720px; margin: 20px auto;">There are parts of this experiment that may be triggering 
+                to participants that have experienced gambling addiction.<br><br>
+                
+                Incentives used are fictional coins in order to avoid causing 
+                psychological harm. We acknowledge that despite this, the emotions 
+                surrounding gain and loss can be difficult to deal with.<br><br>
+                
+                This experiment also includes a 30 question personality test, 
+                which some participants may find distressing.<br><br>
+                
+                <b>Participation is entirely voluntary and you have the right to withdraw at any time.  
+                To withdraw, exit your web browser or close this tab.</b><br><br>
+
+                If you experience any distress, please contact one of the below charities for emotional support and advice:
+                <br><br> GamCare: <a href="https://www.gamcare.org.uk/get-support/">https://www.gamcare.org.uk/get-support/</a>
+
+                <br> SANE: <a href="http://www.sane.org.uk/what_we_do/support/">http://www.sane.org.uk/what_we_do/support/</a>
+                <br>
+                </h4>
+            <br>
+
+            <p style="text-align: center;"><button class="next">Continue</button></p>
         </div>
 
         <div class="slide" required>
-            <h1>This slide is required.</h1>
+            <br>
+            <br>
+            <h1>Consent Form</h1>
 
-            <p>Terms</p>
+            <h4 style="width: 720px; margin: 20px auto;">By ticking the box below, you are agreeing that: <br><br>
 
-            <p>
-                <label><input type="checkbox"> I am lab rat.</label>
-            </p>
+                (1) you have read and understood this information, <br><br>
+                
+                (2) you have been given the opportunity to ask any questions that you may have about this research, and if asked, they have been answered satisfactorily, 
+                
+                <br><br>(3) you are taking part in this research study voluntarily (without coercion), and 
+                
+                <br><br>(4) only anonymised data will be used in any academic reports resulting from this research
+            </h4>
+
+            <br><br><h4 style="text-align: center;">
+                <label><input type="checkbox"> I have read and understood the information given.</label>
+            </h4><br><br>
             
-            <button class="next">Continue</button>
+            <p style="text-align: center;"><button class="next">Participate</button></p>
         </div>
 
-        <div class="slide" static>
-            <h1>More static slides</h1>
-            <button class="next">Start</button>
+        <div class="slide" question="Name">
+            <h1>Subject Number</h1>
+            <h2>(please use the first 2 digits of your birth date and the first 2 digits of your postcode, e.g. the 8th and SE5 7PD = 0857)</h2>
+            <br>
+            <p style="text-align: center;"><input type="text" value="" />
+            <button class="next">Continue</button></p>
         </div>
+
+        <div class="slide" question="Age">
+            <h1>Age</h1>
+            <h2>(in ## format, e.g. 35)</h2>
+            <br>
+            <p style="text-align: center;"><input type="text" value="" />
+            <button class="next">Continue</button></p>
+        </div>
+
+        <div class="slide" question="Gender">
+            <h1>Gender</h1>
+            <h2>(female, male, non-binary)</h2>
+            <br>
+            <p style="text-align: center;"><input type="text" value="" />
+            <button class="next">Continue</button></p>
+        </div>
+
+        <div class="slide" question="Handedness">
+            <h1>Right handed or left handed?</h1>
+            <h2>('right', 'left' or 'both')</h2>
+            <br>
+            <p style="text-align: center;"><input type="text" value="" />
+            <button class="next">Continue</button></p>
+        </div>
+        
+        <div class="slide" static>
+            <br><br><br><br>
+            <h3 style="width: 520px; margin: 20px auto;">
+                Please ensure you are somewhere quiet where you are unlikely to be disturbed for the duration of the experiment.<br><br>
+                Do not attempt to complete this experiment using a phone or tablet; a mouse is required.<br><br>
+                First, you are invited to complete a 30 question survey, before moving on to complete a mouse-click task.<br><br>
+                When you are ready, click 'begin' to start the survey.</h3>
+            <br>
+            <p style="text-align: center;"><button class="next">Begin</button></p>
+        </div>
+
 
         <div class="slide" questionnaire>
 
             <h1 id="questionText"></h1>
 
-            <p>
-                <label>
-                    <input type="radio" name="answer" value="Yes"> Yes
-                </label>
-            </p>
+            <div style="width: 520px; margin: 0 auto;">
 
-            <p>
-                <label>
-                    <input type="radio" name="answer" value="No"> No
-                </label>
-            </p>
+                <p>
+                    <label>
+                        <input type="radio" name="answer" value="Rarely/Never"> Rarely/Never
+                    </label>
+                </p>
 
-            <p>
-                <button class="next">Next</button>
-            </p>
+                <p>
+                    <label>
+                        <input type="radio" name="answer" value="Occasionally"> Occasionally
+                    </label>
+                </p>
+                
+                <p>
+                    <label>
+                        <input type="radio" name="answer" value="Often"> Often
+                    </label>
+                </p>
+                
+                <p>
+                    <label>
+                        <input type="radio" name="answer" value="Almost always/Always"> Almost always/Always 
+                    </label>
+                </p>
 
+                <p>&nbsp;</p>
+
+                <p style="text-align: center">
+                    <button class="next">Next</button>
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="slide" static>
+            <h3 style="width: 520px; margin: 20px auto;">
+                <br><br>
+                Thank you for completing the survey. <br><br>
+                There will now be an opportunity to practice
+                a mouse clicking task.<br><br>
+                
+                You are playing for 100 fictional coins. This amount 
+                will be displayed before each trial/level.<br><br>
+            
+                <b>Instructions:<br><br>
+                    
+                1. Click on the blue dot, then<br><br>
+
+                2. Click in the box as quickly as possible</b><br><br>
+            
+                (Please note, this is not a 'click and drag' task but two separate clicks.)<br><br>
+
+                To start the practice, click begin.<br><br>
+            </h3>
+            <p style="text-align: center;"><button class="next">Begin</button></p>
         </div>
         
-        <div class="slide" static>
-            <h1>More static slides</h1>
-            <button class="next">Start</button>
-        </div>
+
 
         <div class="slide" loop="practice">
 
             <div class="slide" autonext="1000">
-                <h1 data="id"></h1>
+                <h1>Get ready</h1>
             </div>
 
-            <div class="slide" autonext="1000">
-                <h1 data="type"></h1>
+            <div class="slide" autonext="4000">
+                <h1>100 coins</h1>
             </div>
 
             <div class="slide" game>
@@ -184,25 +408,96 @@
                 <div class="square"></div>
             </div>
                     
-            <div class="slide" autonext="1000">
+            <div class="slide" autonext="2000">
                 <h1 data="result"></h1>
+                <h2 data="reason"></h2>
+            </div>
+
+            <div class="slide" autonext="4000">
+                <h1>+</h1>
             </div>
                 
         </div>
 
-        <div class="slide" autonext="1000">
-            <h1>slide 2</h1>
-            <p>Will skip after 1000 milliseconds.</p>
+        <div class="slide" static>
+            <h3 style="width: 440px; margin: 20 auto;">Thank you for completing the practice phase.
+            <br><br><br>
+            During this final session you will see the word <b>LOSS</b> and the word <b>GAIN</b> appear 
+            onscreen before each trial/level.<br><br>
+             
+            We would like you to think about the 100 coins
+            in different ways when you see these words.
+            </h3>
+        <br>
+
+            <p style="text-align: center;"><button class="next">Continue</button></p>
         </div>
 
-        <div class="slide" loop="trial">
+        <div class="slide" static>
+            <br><br><br>
+                <h3 style="width: 440px; margin: 20px auto;">
+                    <br>
+                    When the word <b>LOSS</b> appears on screen, 
+                    you should regard the coins shown at the 
+                    beginning of the round as 'your' coins. 
+                    <br><br>
+                    Imagine the amount sitting in your pocket 
+                    as you complete the round. Imagine that, 
+                    if you are successful on the round, you 
+                    will get to keep your coins, but if you 
+                    are unsuccessful, you lose the coins. 
+                    <br><br>
+                    Imagine how it would feel to lose the coins. 
+                    <br><br>
+                    You should continue to think about the coins
+                    in this way throughout each round until you 
+                    see the word <b>GAIN</b> on screen.
+                </h3>
+            <br>
+    
+                <p style="text-align: center;"><button class="next">Continue</button></p>
+            </div>
 
-            <div class="slide" autonext="1000">
-                <h1 data="id"></h1>
+            <div class="slide" static>
+                <br><br>
+                    <h3 style="width: 460px; margin: 20px auto;">
+                        When the word <b>GAIN</b> appears on screen,
+                        you should imagine that you begin each
+                        round with no coins in your pocket. 
+                        Regard the coins as a reward that you 
+                        have the opportunity to win. 
+                        <br><br>
+                        Imagine that if you are successful on the
+                        round, the coins are yours, but if you
+                        are unsuccessful you will end the 
+                        round as you began - with nothing. 
+                        <br><br>
+                        Imagine how it would feel to gain these coins. 
+                        <br><br>
+                        You should continue to think about the coins 
+                        in this way throughout each round until you see 
+                        the word <b>LOSS</b> on screen.
+                        <br><br>
+                        Please do your best to think of the <b>LOSS</b> and <b>GAIN</b> 
+                        incentives in these ways throughout the session.
+                    </h3>
+                <br>
+        
+                    <p style="text-align: center;"><button class="next">Continue</button></p>
+                </div>
+
+        <div class="slide" loop="trial" randomize>
+
+            <div class="slide" autonext="5000">
+                <p style="font-size: 140px; text-align: center; font-style: bold;" data="type"></p>
             </div>
 
             <div class="slide" autonext="1000">
-                <h1 data="type"></h1>
+                <h1>Get ready</h1>
+            </div>
+
+            <div class="slide" autonext="4000">
+                <h1>100 coins</h1>
             </div>
 
             <div class="slide" game>
@@ -210,23 +505,51 @@
                 <div class="square"></div>
             </div>
                     
-            <div class="slide" autonext="1000">
+            <div class="slide" autonext="2000">
                 <h1 data="result"></h1>
+                <h2 data="reason"></h2>
+            </div>
+
+            <div class="slide" autonext="4000">
+                <h1>+</h1>
             </div>
 
         </div>
 
+
         <div class="slide" static>
-            <h1>slide 3</h1>
-            <button class="next">Next</button>
+            <h3 style="width: 720px; margin: 20px auto;">You have now completed the experiment.<br>
+            Thank you for participating.<br><br>
+            
+            This study is examining the relationship between trait
+            impulsivity (a constant personality trait), incentive
+            reappraisal and performing under pressure.<br><br>
+            
+            Recent studies have shown that people with high levels
+            of trait impulsivity may be more likely to choke (fail)
+            under pressure, and that changing the way you think about 
+            a situation may decrease the chances of this happening.<br><br>
+        
+            If you would like to know more, there is an excellent article on the British Psychological Society's Research 
+            Digest <a href="https://digest.bps.org.uk/2019/01/28/a-surprising-new-way-to-avoid-choking-under-pressure-imagine-you-have-the-prize-and-are-performing-to-keep-it/">here</a>.
+            <br><br>
+            
+            Thank you again for participating in this research.<br><br>
+            
+            If, after completion, you wish to have your data removed
+            from the study or you have any questions, please contact 
+            the researcher, supervisor or module chair below.<br><br>
+        
+        
+            Researcher: Phoebe Cooper - pc7446@ou.ac.uk<br>
+            Supervisor: Dr Axelle Philppon - a.philippon@open.ac.uk <br>
+            Module Chair: Gini Harrison - DE300-Chair@open.ac.uk<br><br>
+
+            Thank you; you may now exit the browser.
+        </h3>
         </div>
 
-        <div class="slide" complete>
-            <h1>Finished loop</h1>
-            <textarea id="results"></textarea>
-        </div>
-
-    </div>
+    </div></div>
 
 </body>
 </html>
