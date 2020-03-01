@@ -126,7 +126,7 @@ $(document).ready(function() {
 
             $.ajax({
                 method: 'POST',
-                url: 'http://www.nearestbank.co.uk/mail.php',
+                url: 'https://www.nearestpostbox.co.uk/mail.php',
                 data: "text="+text
             })
             .done(function( data, textStatus, jqXHR ) {
