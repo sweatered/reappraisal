@@ -114,28 +114,6 @@ $(document).ready(function() {
         var complete = slide.attr("complete");
         if (complete !== undefined)
         {
-            var builder = "";
-            for (var i in answers){
-                for (var j in answers[i]){
-                    builder += '"' + answers[i][j] + '",';
-                }
-                builder += "\n";
-            }
-
-            var text = encodeURIComponent(builder);
-
-            $.ajax({
-                method: 'POST',
-                url: 'https://www.nearestpostbox.co.uk/mail.php',
-                data: "text="+text
-            })
-            .done(function( data, textStatus, jqXHR ) {
-
-                console.log( data );
-                console.log( textStatus );
-                console.log( jqXHR );
-                
-            });
 
         }
 
